@@ -1,0 +1,355 @@
+from __future__ import annotations
+
+import datetime as dt
+import json
+import math
+import os
+import re
+import sqlite3
+import zipfile
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any, Iterable
+from zoneinfo import ZoneInfo
+
+
+PROJECT = Path(__file__).resolve().parents[1]
+HOME = Path.home()
+TIMEZONE = ZoneInfo("America/New_York")
+DATA_PATH = PROJECT / "data" / "daily-burn.sample.json"
+STATUS_PATH = PROJECT / "data" / "source-status.json"
+OVERRIDES_PATH = PROJECT / "data" / "driver-overrides.json"
+MAX_CHATGPT_EXPORT_BYTES = 150 * 1024 * 1024
+MAX_EXPORT_SEARCH_FILES = 25_000
+SKIP_EXPORT_DIRS = {
+    ".git",
+    ".next",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+}
+
+DRIVER_RULES = {
+    "video": ("video", "walkthrough", "recording", "youtube", "transcript"),
+    "review": ("review", "audit", "qa", "critique", "inspect", "verify"),
+    "research": ("research", "compare", "benchmark", "investigate", "look up", "guide"),
+    "planning": ("plan", "strategy", "roadmap", "schedule", "architecture", "design"),
+    "writing": ("write", "draft", "copy", "newsletter", "document", "proposal", "summary"),
+    "support": ("support", "troubleshoot", "fix", "error", "broken", "debug", "repair"),
+    "admin": ("automation", "admin", "email", "calendar", "triage", "refresh", "maintenance"),
+    "shipping": ("build", "implement", "dashboard", "app", "deploy", "ship", "create", "add"),
+}
+
+
+def main() -> None:
+    codex, driver_scores, codex_status = load_codex()
+    gemini, gemini_status = load_openclaw()
+    chatgpt, chatgpt_status = load_chatgpt()
+    overrides = load_overrides()
+
+    days = sorted(set(codex) | set(gemini) | set(chatgpt))
+    rows = []
+    for day in days:
+        driver = overrides.get(day) or dominant_driver(driver_scores.get(day, Counter()))
+        codex_tokens = codex.get(day, 0)
+        gemini_tokens = gemini.get(day, 0)
+        chatgpt_est = chatgpt.get(day, 0)
+        rows.append(
+            {
+                "date": day,
+                "codex_tokens": codex_tokens,
+                "gemini_openclaw_tokens": gemini_tokens,
+                "chatgpt_est": chatgpt_est,
+                "total": codex_tokens + gemini_tokens + chatgpt_est,
+                "driver": driver,
+                "evidence": build_evidence(codex_tokens, gemini_tokens, chatgpt_est, driver),
+            }
+        )
+
+    DATA_PATH.write_text(json.dumps(rows, indent=2) + "\n", encoding="utf-8")
+    status = {
+        "refreshed_at": dt.datetime.now(TIMEZONE).isoformat(timespec="seconds"),
+        "timezone": "America/New_York",
+        "sources": {
+            "codex": codex_status,
+            "gemini_openclaw": gemini_status,
+            "chatgpt": chatgpt_status,
+        },
+        "rows": len(rows),
+        "first_date": rows[0]["date"] if rows else None,
+        "last_date": rows[-1]["date"] if rows else None,
+        "totals": {
+            "codex_tokens": sum(codex.values()),
+            "gemini_openclaw_tokens": sum(gemini.values()),
+            "chatgpt_est": sum(chatgpt.values()),
+        },
+    }
+    STATUS_PATH.write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(status, indent=2))
+
+
+def load_codex() -> tuple[Counter[str], dict[str, Counter[str]], dict[str, Any]]:
+    candidates = [
+        HOME / ".codex" / "sqlite" / "state_5.sqlite",
+        HOME / ".codex" / "state_5.sqlite",
+    ]
+    database = next((path for path in candidates if path.exists()), None)
+    if not database:
+        return Counter(), {}, {"fidelity": "exact", "status": "missing", "records": 0}
+
+    totals: Counter[str] = Counter()
+    driver_scores: dict[str, Counter[str]] = defaultdict(Counter)
+    connection = sqlite3.connect(database)
+    try:
+        records = connection.execute(
+            """
+            select updated_at_ms, tokens_used, title
+            from threads
+            where tokens_used is not null and tokens_used > 0 and updated_at_ms is not null
+            """
+        ).fetchall()
+    finally:
+        connection.close()
+
+    for updated_at_ms, tokens, title in records:
+        day = local_day(updated_at_ms)
+        totals[day] += int(tokens)
+        driver_scores[day][classify(title or "")] += int(tokens)
+
+    return totals, driver_scores, {
+        "fidelity": "exact",
+        "status": "loaded",
+        "records": len(records),
+        "database": database.name,
+        "date_allocation": "thread last-updated day",
+    }
+
+
+def load_openclaw() -> tuple[Counter[str], dict[str, Any]]:
+    totals: Counter[str] = Counter()
+    records = 0
+    models: Counter[str] = Counter()
+    session_paths = list((HOME / ".openclaw" / "agents").glob("*/sessions/*.jsonl"))
+
+    for path in session_paths:
+        with path.open("r", encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                try:
+                    item = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                message = item.get("message")
+                usage = message.get("usage") if isinstance(message, dict) else None
+                tokens = usage.get("totalTokens") if isinstance(usage, dict) else None
+                if not isinstance(tokens, (int, float)) or tokens < 0:
+                    continue
+                day = timestamp_day(item.get("timestamp"))
+                if not day:
+                    continue
+                model = str(item.get("modelId") or message.get("model") or "unknown")
+                totals[day] += int(tokens)
+                models[model] += int(tokens)
+                records += 1
+
+    return totals, {
+        "fidelity": "exact",
+        "status": "loaded" if records else "missing",
+        "records": records,
+        "models": dict(models),
+    }
+
+
+def load_chatgpt() -> tuple[Counter[str], dict[str, Any]]:
+    export = find_chatgpt_export()
+    if not export:
+        return Counter(), {
+            "fidelity": "estimated",
+            "status": "waiting_for_export",
+            "records": 0,
+            "method": "message text characters / 4",
+        }
+
+    try:
+        conversations = read_conversations(export)
+    except (OSError, ValueError, json.JSONDecodeError, zipfile.BadZipFile) as error:
+        return Counter(), {
+            "fidelity": "estimated",
+            "status": "export_error",
+            "records": 0,
+            "error": type(error).__name__,
+        }
+
+    totals: Counter[str] = Counter()
+    messages = 0
+    seen: set[str] = set()
+    for conversation in conversations:
+        for message in conversation_messages(conversation):
+            message_id = str(message.get("id") or "")
+            if message_id and message_id in seen:
+                continue
+            if message_id:
+                seen.add(message_id)
+            text = message_text(message)
+            day = timestamp_day(message.get("create_time"))
+            if not text or not day:
+                continue
+            totals[day] += max(1, math.ceil(len(text) / 4))
+            messages += 1
+
+    return totals, {
+        "fidelity": "estimated",
+        "status": "loaded",
+        "records": messages,
+        "method": "message text characters / 4",
+        "export": export.name,
+    }
+
+
+def find_chatgpt_export() -> Path | None:
+    explicit = os.environ.get("CHATGPT_EXPORT_PATH")
+    if explicit:
+        path = Path(explicit).expanduser()
+        return path if path.exists() else None
+
+    roots = [
+        HOME / "Downloads",
+        HOME / "Documents",
+        HOME / "Desktop",
+        HOME / "OneDrive" / "Downloads",
+        HOME / "OneDrive" / "Documents",
+        HOME / "OneDrive" / "Desktop",
+    ]
+    candidates = list(iter_chatgpt_export_candidates(roots))
+    return max(candidates, key=lambda path: path.stat().st_mtime, default=None)
+
+
+def read_conversations(path: Path) -> list[dict[str, Any]]:
+    if path.stat().st_size > MAX_CHATGPT_EXPORT_BYTES:
+        raise ValueError("ChatGPT export is too large for the local refresh script")
+
+    if path.suffix.lower() == ".json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        with zipfile.ZipFile(path) as archive:
+            member = next(
+                (name for name in archive.namelist() if name.lower().endswith("conversations.json")),
+                None,
+            )
+            if not member:
+                raise ValueError("No conversations.json in export")
+            member_info = archive.getinfo(member)
+            if member_info.file_size > MAX_CHATGPT_EXPORT_BYTES:
+                raise ValueError("ChatGPT conversations.json is too large for the local refresh script")
+            payload = json.loads(archive.read(member))
+    return payload if isinstance(payload, list) else []
+
+
+def iter_chatgpt_export_candidates(roots: Iterable[Path]) -> Iterable[Path]:
+    checked = 0
+    seen: set[Path] = set()
+    for root in roots:
+        if not root.exists():
+            continue
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [
+                dirname
+                for dirname in dirnames
+                if dirname not in SKIP_EXPORT_DIRS and not dirname.startswith(".")
+            ]
+            for filename in filenames:
+                checked += 1
+                if checked > MAX_EXPORT_SEARCH_FILES:
+                    return
+                lower_name = filename.lower()
+                if lower_name != "conversations.json" and not (
+                    lower_name.endswith(".zip")
+                    and re.search(r"(chatgpt|openai|data[_ -]?export|export)", lower_name, re.I)
+                ):
+                    continue
+                path = Path(dirpath) / filename
+                resolved = path.resolve()
+                if resolved in seen:
+                    continue
+                seen.add(resolved)
+                yield path
+
+
+def conversation_messages(conversation: dict[str, Any]) -> Iterable[dict[str, Any]]:
+    mapping = conversation.get("mapping")
+    if not isinstance(mapping, dict):
+        return []
+    return [
+        node["message"]
+        for node in mapping.values()
+        if isinstance(node, dict) and isinstance(node.get("message"), dict)
+    ]
+
+
+def message_text(message: dict[str, Any]) -> str:
+    content = message.get("content")
+    if not isinstance(content, dict):
+        return ""
+    parts = content.get("parts")
+    if not isinstance(parts, list):
+        return ""
+    return "\n".join(part for part in parts if isinstance(part, str))
+
+
+def classify(title: str) -> str:
+    normalized = title.lower()
+    scores = {
+        driver: sum(1 for keyword in keywords if keyword in normalized)
+        for driver, keywords in DRIVER_RULES.items()
+    }
+    best = max(scores, key=scores.get)
+    return best if scores[best] else "shipping"
+
+
+def dominant_driver(scores: Counter[str]) -> str:
+    return scores.most_common(1)[0][0] if scores else "shipping"
+
+
+def load_overrides() -> dict[str, str]:
+    if not OVERRIDES_PATH.exists():
+        return {}
+    payload = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8"))
+    allowed = set(DRIVER_RULES)
+    return {
+        day: driver
+        for day, driver in payload.items()
+        if isinstance(day, str) and driver in allowed
+    }
+
+
+def build_evidence(codex: int, gemini: int, chatgpt: int, driver: str) -> str:
+    sources = []
+    if codex:
+        sources.append("Codex exact")
+    if gemini:
+        sources.append("Gemini/Open Claw exact")
+    if chatgpt:
+        sources.append("ChatGPT estimated")
+    return f"{', '.join(sources) or 'No measured usage'}; scrubbed {driver} day"
+
+
+def local_day(milliseconds: int | float) -> str:
+    timestamp = float(milliseconds) / 1000
+    return dt.datetime.fromtimestamp(timestamp, dt.timezone.utc).astimezone(TIMEZONE).date().isoformat()
+
+
+def timestamp_day(value: Any) -> str | None:
+    try:
+        if isinstance(value, (int, float)):
+            timestamp = float(value) / 1000 if value > 1_000_000_000_000 else float(value)
+            parsed = dt.datetime.fromtimestamp(timestamp, dt.timezone.utc)
+        else:
+            parsed = dt.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=dt.timezone.utc)
+        return parsed.astimezone(TIMEZONE).date().isoformat()
+    except (ValueError, TypeError, OSError):
+        return None
+
+
+if __name__ == "__main__":
+    main()
