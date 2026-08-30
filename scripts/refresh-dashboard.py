@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 PROJECT = Path(__file__).resolve().parents[1]
 HOME = Path.home()
 CHATGPT_EXPORT_INBOX = Path("D:/ChatGPT Export")
+CHATGPT_EXPORT_DOWNLOADS = Path("D:/Downloads")
 TIMEZONE = ZoneInfo("America/New_York")
 DATA_PATH = PROJECT / "data" / "daily-burn.sample.json"
 STATUS_PATH = PROJECT / "data" / "source-status.json"
@@ -215,9 +216,10 @@ def find_chatgpt_export() -> Path | None:
         path = Path(explicit).expanduser()
         return path if path.is_file() else None
 
-    inbox_candidates = list(iter_chatgpt_inbox_candidates(CHATGPT_EXPORT_INBOX))
-    if inbox_candidates:
-        return max(inbox_candidates, key=lambda path: path.stat().st_mtime)
+    validated_candidates = [
+        *iter_chatgpt_inbox_candidates(CHATGPT_EXPORT_INBOX),
+        *iter_chatgpt_inbox_candidates(CHATGPT_EXPORT_DOWNLOADS),
+    ]
 
     roots = [
         HOME / "Downloads",
@@ -227,7 +229,7 @@ def find_chatgpt_export() -> Path | None:
         HOME / "OneDrive" / "Documents",
         HOME / "OneDrive" / "Desktop",
     ]
-    candidates = list(iter_chatgpt_export_candidates(roots))
+    candidates = [*validated_candidates, *iter_chatgpt_export_candidates(roots)]
     return max(candidates, key=lambda path: path.stat().st_mtime, default=None)
 
 

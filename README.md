@@ -59,7 +59,7 @@ On Windows, run:
 The refresh process:
 
 1. Reads locally available Codex and OpenClaw usage records.
-2. Checks `D:\ChatGPT Export` first, then looks in common Downloads, Documents, and Desktop locations.
+2. Selects the newest valid ChatGPT export from `D:\ChatGPT Export`, `D:\Downloads`, and common user Downloads, Documents, and Desktop locations.
 3. Applies any manual driver classifications from `data/driver-overrides.json`.
 4. Rewrites `data/daily-burn.sample.json` and `data/source-status.json`.
 5. Runs a production build to validate the refreshed data.
@@ -73,7 +73,7 @@ $env:CHATGPT_EXPORT_PATH = "C:\path\to\chatgpt-export.zip"
 
 ### ChatGPT export inbox
 
-The private ChatGPT export inbox is `D:\ChatGPT Export`. Download the account data ZIP from ChatGPT, place the ZIP in that folder without extracting it, and run:
+The private ChatGPT export inbox is `D:\ChatGPT Export`. Download the account data ZIP from ChatGPT and leave it in `D:\Downloads` or place it in the private inbox without extracting it, then run:
 
 ```powershell
 Set-Location "D:\Codex Projects\Active\Token Burn Dashboard"

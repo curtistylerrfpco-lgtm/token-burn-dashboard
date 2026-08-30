@@ -739,10 +739,10 @@
   },
   {
     "date": "2026-08-29",
-    "codex_tokens": 1640658,
+    "codex_tokens": 2892153,
     "gemini_openclaw_tokens": 0,
     "chatgpt_est": 0,
-    "total": 1640658,
+    "total": 2892153,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
