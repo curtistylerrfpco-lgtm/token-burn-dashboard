@@ -1,5 +1,5 @@
 {
-  "refreshed_at": "2026-08-26T16:38:38-04:00",
+  "refreshed_at": "2026-08-29T23:52:18-04:00",
   "timezone": "America/New_York",
   "sources": {
     "codex": {
@@ -20,17 +20,17 @@
     },
     "chatgpt": {
       "fidelity": "estimated",
-      "status": "waiting_for_export",
-      "records": 0,
+      "status": "loaded",
+      "records": 2679,
       "method": "message text characters / 4"
     }
   },
-  "rows": 13,
-  "first_date": "2026-03-31",
-  "last_date": "2026-08-26",
+  "rows": 83,
+  "first_date": "2025-07-02",
+  "last_date": "2026-08-29",
   "totals": {
-    "codex_tokens": 75771595,
+    "codex_tokens": 71829237,
     "gemini_openclaw_tokens": 370725,
-    "chatgpt_est": 0
+    "chatgpt_est": 620325
   }
 }

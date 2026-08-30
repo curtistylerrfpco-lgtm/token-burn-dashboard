@@ -15,12 +15,17 @@ from zoneinfo import ZoneInfo
 
 PROJECT = Path(__file__).resolve().parents[1]
 HOME = Path.home()
+CHATGPT_EXPORT_INBOX = Path("D:/ChatGPT Export")
 TIMEZONE = ZoneInfo("America/New_York")
 DATA_PATH = PROJECT / "data" / "daily-burn.sample.json"
 STATUS_PATH = PROJECT / "data" / "source-status.json"
 OVERRIDES_PATH = PROJECT / "data" / "driver-overrides.json"
 MAX_CHATGPT_EXPORT_BYTES = 150 * 1024 * 1024
 MAX_EXPORT_SEARCH_FILES = 25_000
+CHATGPT_CONVERSATION_MEMBER_RE = re.compile(
+    r"(?:^|/)conversations(?:-\d+)?\.json$",
+    re.IGNORECASE,
+)
 SKIP_EXPORT_DIRS = {
     ".git",
     ".next",
@@ -201,7 +206,6 @@ def load_chatgpt() -> tuple[Counter[str], dict[str, Any]]:
         "status": "loaded",
         "records": messages,
         "method": "message text characters / 4",
-        "export": export.name,
     }
 
 
@@ -209,7 +213,11 @@ def find_chatgpt_export() -> Path | None:
     explicit = os.environ.get("CHATGPT_EXPORT_PATH")
     if explicit:
         path = Path(explicit).expanduser()
-        return path if path.exists() else None
+        return path if path.is_file() else None
+
+    inbox_candidates = list(iter_chatgpt_inbox_candidates(CHATGPT_EXPORT_INBOX))
+    if inbox_candidates:
+        return max(inbox_candidates, key=lambda path: path.stat().st_mtime)
 
     roots = [
         HOME / "Downloads",
@@ -223,6 +231,31 @@ def find_chatgpt_export() -> Path | None:
     return max(candidates, key=lambda path: path.stat().st_mtime, default=None)
 
 
+def iter_chatgpt_inbox_candidates(inbox: Path) -> Iterable[Path]:
+    """Find validated exports in the private D: drive inbox.
+
+    Any ZIP filename is accepted here because OpenAI export filenames can vary.
+    ZIPs are only returned when they actually contain conversations.json.
+    """
+    if not inbox.exists():
+        return
+
+    for path in inbox.rglob("*"):
+        if not path.is_file():
+            continue
+        if path.name.lower() == "conversations.json":
+            yield path
+            continue
+        if path.suffix.lower() != ".zip":
+            continue
+        try:
+            with zipfile.ZipFile(path) as archive:
+                if chatgpt_conversation_members(archive):
+                    yield path
+        except (OSError, zipfile.BadZipFile):
+            continue
+
+
 def read_conversations(path: Path) -> list[dict[str, Any]]:
     if path.stat().st_size > MAX_CHATGPT_EXPORT_BYTES:
         raise ValueError("ChatGPT export is too large for the local refresh script")
@@ -231,17 +264,30 @@ def read_conversations(path: Path) -> list[dict[str, Any]]:
         payload = json.loads(path.read_text(encoding="utf-8"))
     else:
         with zipfile.ZipFile(path) as archive:
-            member = next(
-                (name for name in archive.namelist() if name.lower().endswith("conversations.json")),
-                None,
-            )
-            if not member:
-                raise ValueError("No conversations.json in export")
-            member_info = archive.getinfo(member)
-            if member_info.file_size > MAX_CHATGPT_EXPORT_BYTES:
-                raise ValueError("ChatGPT conversations.json is too large for the local refresh script")
-            payload = json.loads(archive.read(member))
+            members = chatgpt_conversation_members(archive)
+            if not members:
+                raise ValueError("No ChatGPT conversation history files in export")
+            if sum(member.file_size for member in members) > MAX_CHATGPT_EXPORT_BYTES:
+                raise ValueError("ChatGPT conversation history is too large for the local refresh script")
+            payload = []
+            for member in members:
+                part = json.loads(archive.read(member))
+                if not isinstance(part, list):
+                    raise ValueError(f"Unexpected ChatGPT export payload in {member.filename}")
+                payload.extend(part)
     return payload if isinstance(payload, list) else []
+
+
+def chatgpt_conversation_members(archive: zipfile.ZipFile) -> list[zipfile.ZipInfo]:
+    """Return full conversation-history parts, excluding shared_conversations.json."""
+    return sorted(
+        (
+            member
+            for member in archive.infolist()
+            if CHATGPT_CONVERSATION_MEMBER_RE.search(member.filename.replace("\\", "/"))
+        ),
+        key=lambda member: member.filename.lower(),
+    )
 
 
 def iter_chatgpt_export_candidates(roots: Iterable[Path]) -> Iterable[Path]:

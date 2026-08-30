@@ -59,7 +59,7 @@ On Windows, run:
 The refresh process:
 
 1. Reads locally available Codex and OpenClaw usage records.
-2. Looks for a recent ChatGPT export in common Downloads, Documents, and Desktop locations.
+2. Checks `D:\ChatGPT Export` first, then looks in common Downloads, Documents, and Desktop locations.
 3. Applies any manual driver classifications from `data/driver-overrides.json`.
 4. Rewrites `data/daily-burn.sample.json` and `data/source-status.json`.
 5. Runs a production build to validate the refreshed data.
@@ -70,6 +70,27 @@ To use a specific ChatGPT export, set `CHATGPT_EXPORT_PATH` before refreshing:
 $env:CHATGPT_EXPORT_PATH = "C:\path\to\chatgpt-export.zip"
 .\scripts\refresh-dashboard.ps1
 ```
+
+### ChatGPT export inbox
+
+The private ChatGPT export inbox is `D:\ChatGPT Export`. Download the account data ZIP from ChatGPT, place the ZIP in that folder without extracting it, and run:
+
+```powershell
+Set-Location "D:\Codex Projects\Active\Token Burn Dashboard"
+.\scripts\refresh-dashboard.ps1
+```
+
+The ZIP may have any filename; it is only accepted when it contains `conversations.json` or modern split files such as `conversations-000.json`. Raw ChatGPT conversations stay in the D: drive inbox and are never copied into this repository. Only per-day estimated token totals are written to the dashboard data files.
+
+## Publish refreshed data
+
+The guarded publisher refreshes all local sources, validates the production build, commits only the two generated dashboard data files, and pushes `main` so Vercel can redeploy:
+
+```powershell
+.\scripts\publish-dashboard.ps1
+```
+
+For safety, publishing stops when the repository already contains changes, the current branch is not `main`, the remote cannot be fast-forwarded, the build fails, or the refresh changes an unexpected file. The computer must be awake and connected to the internet when a scheduled local run begins.
 
 ## Data format
 
@@ -105,11 +126,12 @@ data/                        Normalized usage and source-status files
 lib/                         Date windows, aggregation, and token math
 scripts/refresh-dashboard.py Data collection and normalization
 scripts/refresh-dashboard.ps1 Windows refresh and build helper
+scripts/publish-dashboard.ps1 Guarded Git/Vercel publishing helper
 ```
 
 ## Privacy
 
-The refresh scripts read usage data locally. Before publishing or deploying, review the generated files and keep raw exports, environment files, private project names, and other sensitive metadata out of source control. Local Vercel metadata and environment files are excluded by `.gitignore`.
+The refresh scripts read usage data locally. The ChatGPT export inbox is outside this repository, so raw conversations are not included in Git or Vercel deployments. Before publishing or deploying, review the generated files and keep raw exports, environment files, private project names, and other sensitive metadata out of source control. Local Vercel metadata and environment files are excluded by `.gitignore`.
 
 ## Deployment
 

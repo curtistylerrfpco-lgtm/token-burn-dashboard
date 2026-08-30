@@ -11,6 +11,7 @@ $pythonCandidates = @($pythonCandidates)
 
 $packageManagerCandidates = @(
     "C:\Users\treeb\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\pnpm.cmd",
+    "C:\Users\treeb\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\fallback\pnpm.cmd",
     (Get-Command pnpm.cmd -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -First 1),
     (Get-Command npm.cmd -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -First 1)
 ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) }

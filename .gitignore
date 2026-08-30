@@ -15,6 +15,7 @@ out/
 
 # Logs and local OS/editor files
 *.log
+__pycache__/
 .DS_Store
 Thumbs.db
 .vscode/

@@ -1,12 +1,507 @@
 [
   {
+    "date": "2025-07-02",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 483,
+    "total": 483,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2025-07-03",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 3894,
+    "total": 3894,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-02-27",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1032,
+    "total": 1032,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-11",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 20281,
+    "total": 20281,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-12",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 4061,
+    "total": 4061,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-13",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 9066,
+    "total": 9066,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-15",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 7999,
+    "total": 7999,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-16",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1139,
+    "total": 1139,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-17",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 3901,
+    "total": 3901,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-18",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 2063,
+    "total": 2063,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-19",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 626,
+    "total": 626,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-20",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 16358,
+    "total": 16358,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-23",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 13004,
+    "total": 13004,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-24",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 203,
+    "total": 203,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-25",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 11711,
+    "total": 11711,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-26",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 32713,
+    "total": 32713,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-27",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 17169,
+    "total": 17169,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-28",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 532,
+    "total": 532,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-29",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 5378,
+    "total": 5378,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-03-30",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 3639,
+    "total": 3639,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
     "date": "2026-03-31",
     "codex_tokens": 0,
     "gemini_openclaw_tokens": 254992,
-    "chatgpt_est": 0,
-    "total": 254992,
+    "chatgpt_est": 1398,
+    "total": 256390,
     "driver": "shipping",
-    "evidence": "Gemini/Open Claw exact; scrubbed shipping day"
+    "evidence": "Gemini/Open Claw exact, ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-01",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 9436,
+    "total": 9436,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-02",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 26944,
+    "total": 26944,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-03",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 49514,
+    "total": 49514,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-04",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 756,
+    "total": 756,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-06",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1270,
+    "total": 1270,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-07",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1184,
+    "total": 1184,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-08",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 265,
+    "total": 265,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-09",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 252,
+    "total": 252,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-10",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 443,
+    "total": 443,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-13",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 918,
+    "total": 918,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-15",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 2022,
+    "total": 2022,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-16",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 8114,
+    "total": 8114,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-17",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1608,
+    "total": 1608,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-18",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 13464,
+    "total": 13464,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-19",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 32145,
+    "total": 32145,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-20",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 22070,
+    "total": 22070,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-21",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 6079,
+    "total": 6079,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-22",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 12576,
+    "total": 12576,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-23",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 21261,
+    "total": 21261,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-24",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 12659,
+    "total": 12659,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-27",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 26228,
+    "total": 26228,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-28",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 309,
+    "total": 309,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-29",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1966,
+    "total": 1966,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-04-30",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 4812,
+    "total": 4812,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-01",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 16675,
+    "total": 16675,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-04",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 58032,
+    "total": 58032,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-05",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 57040,
+    "total": 57040,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-06",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 26721,
+    "total": 26721,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-07",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 5054,
+    "total": 5054,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-09",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 12340,
+    "total": 12340,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-10",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1049,
+    "total": 1049,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-11",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 407,
+    "total": 407,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-13",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1147,
+    "total": 1147,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-14",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 110,
+    "total": 110,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-19",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 65,
+    "total": 65,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
   },
   {
     "date": "2026-05-20",
@@ -16,6 +511,87 @@
     "total": 115733,
     "driver": "shipping",
     "evidence": "Gemini/Open Claw exact; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-23",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 473,
+    "total": 473,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-24",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 2902,
+    "total": 2902,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-26",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 22,
+    "total": 22,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-28",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 263,
+    "total": 263,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-05-29",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 166,
+    "total": 166,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-06-04",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 13565,
+    "total": 13565,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-06-20",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 21,
+    "total": 21,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-06-21",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 86,
+    "total": 86,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-06-24",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 504,
+    "total": 504,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
   },
   {
     "date": "2026-06-25",
@@ -30,10 +606,10 @@
     "date": "2026-06-26",
     "codex_tokens": 5359459,
     "gemini_openclaw_tokens": 0,
-    "chatgpt_est": 0,
-    "total": 5359459,
+    "chatgpt_est": 1804,
+    "total": 5361263,
     "driver": "shipping",
-    "evidence": "Codex exact; scrubbed shipping day"
+    "evidence": "Codex exact, ChatGPT estimated; scrubbed shipping day"
   },
   {
     "date": "2026-07-03",
@@ -66,10 +642,10 @@
     "date": "2026-07-10",
     "codex_tokens": 180863,
     "gemini_openclaw_tokens": 0,
-    "chatgpt_est": 0,
-    "total": 180863,
+    "chatgpt_est": 331,
+    "total": 181194,
     "driver": "support",
-    "evidence": "Codex exact; scrubbed support day"
+    "evidence": "Codex exact, ChatGPT estimated; scrubbed support day"
   },
   {
     "date": "2026-07-12",
@@ -84,10 +660,10 @@
     "date": "2026-07-17",
     "codex_tokens": 1130564,
     "gemini_openclaw_tokens": 0,
-    "chatgpt_est": 0,
-    "total": 1130564,
+    "chatgpt_est": 68,
+    "total": 1130632,
     "driver": "shipping",
-    "evidence": "Codex exact; scrubbed shipping day"
+    "evidence": "Codex exact, ChatGPT estimated; scrubbed shipping day"
   },
   {
     "date": "2026-07-18",
@@ -99,6 +675,33 @@
     "evidence": "Codex exact; scrubbed shipping day"
   },
   {
+    "date": "2026-07-31",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 362,
+    "total": 362,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-08-03",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1144,
+    "total": 1144,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-08-06",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 279,
+    "total": 279,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
     "date": "2026-08-09",
     "codex_tokens": 9033241,
     "gemini_openclaw_tokens": 0,
@@ -108,11 +711,38 @@
     "evidence": "Codex exact; scrubbed admin day"
   },
   {
+    "date": "2026-08-25",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 1930,
+    "total": 1930,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
     "date": "2026-08-26",
-    "codex_tokens": 5583016,
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 4638,
+    "total": 4638,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-08-27",
+    "codex_tokens": 0,
+    "gemini_openclaw_tokens": 0,
+    "chatgpt_est": 182,
+    "total": 182,
+    "driver": "shipping",
+    "evidence": "ChatGPT estimated; scrubbed shipping day"
+  },
+  {
+    "date": "2026-08-29",
+    "codex_tokens": 1640658,
     "gemini_openclaw_tokens": 0,
     "chatgpt_est": 0,
-    "total": 5583016,
+    "total": 1640658,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
