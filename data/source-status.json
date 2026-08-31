@@ -1,11 +1,11 @@
 {
-  "refreshed_at": "2026-08-30T21:32:18-04:00",
+  "refreshed_at": "2026-08-30T23:00:25-04:00",
   "timezone": "America/New_York",
   "sources": {
     "codex": {
       "fidelity": "exact",
       "status": "loaded",
-      "records": 25,
+      "records": 26,
       "database": "state_5.sqlite",
       "date_allocation": "thread last-updated day"
     },
@@ -38,7 +38,7 @@
   "first_date": "2025-01-26",
   "last_date": "2026-08-30",
   "totals": {
-    "codex_tokens": 75008542,
+    "codex_tokens": 75921172,
     "gemini_openclaw_tokens": 370725,
     "gemini_export_est": 410854,
     "chatgpt_est": 620325

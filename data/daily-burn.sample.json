@@ -1161,11 +1161,11 @@
   },
   {
     "date": "2026-08-30",
-    "codex_tokens": 1151870,
+    "codex_tokens": 2064500,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 362,
     "chatgpt_est": 0,
-    "total": 1152232,
+    "total": 2064862,
     "driver": "admin",
     "evidence": "Codex exact, Gemini export estimated; scrubbed admin day"
   }
