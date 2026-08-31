@@ -1,11 +1,11 @@
 {
-  "refreshed_at": "2026-08-29T23:55:00-04:00",
+  "refreshed_at": "2026-08-30T21:32:18-04:00",
   "timezone": "America/New_York",
   "sources": {
     "codex": {
       "fidelity": "exact",
       "status": "loaded",
-      "records": 24,
+      "records": 25,
       "database": "state_5.sqlite",
       "date_allocation": "thread last-updated day"
     },
@@ -18,6 +18,15 @@
         "gemini-2.5-flash": 115733
       }
     },
+    "gemini_export": {
+      "fidelity": "estimated",
+      "status": "loaded",
+      "records": 613,
+      "activity_records": 612,
+      "workspace_conversations": 1,
+      "method": "visible exported conversation text characters / 4",
+      "export": "takeout-20260830T174118Z-1-001.zip"
+    },
     "chatgpt": {
       "fidelity": "estimated",
       "status": "loaded",
@@ -25,12 +34,13 @@
       "method": "message text characters / 4"
     }
   },
-  "rows": 83,
-  "first_date": "2025-07-02",
-  "last_date": "2026-08-29",
+  "rows": 117,
+  "first_date": "2025-01-26",
+  "last_date": "2026-08-30",
   "totals": {
-    "codex_tokens": 73080732,
+    "codex_tokens": 75008542,
     "gemini_openclaw_tokens": 370725,
+    "gemini_export_est": 410854,
     "chatgpt_est": 620325
   }
 }

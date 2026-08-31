@@ -129,7 +129,7 @@ export default function TokenBurnDashboard() {
           <p className="footerNote">
             Refreshed {sourceStatus.refreshed_at.slice(0, 10)}. Codex totals are exact
             thread snapshots bucketed by last update; Gemini/Open Claw uses exact local
-            usage records; ChatGPT is {sourceStatus.sources.chatgpt.status.replaceAll("_", " ")}.
+            usage records; Gemini and ChatGPT exports are estimated from visible text.
           </p>
         </Panel>
 
@@ -198,6 +198,7 @@ export default function TokenBurnDashboard() {
                 <th>7d avg</th>
                 <th>Codex exact</th>
                 <th>Gemini/Open Claw exact</th>
+                <th>Gemini export est.</th>
                 <th>ChatGPT est.</th>
                 <th>Driver</th>
               </tr>
@@ -214,6 +215,7 @@ export default function TokenBurnDashboard() {
                     <td>{formatTokens(movingAverage7(selectedRows, originalIndex))}</td>
                     <td>{formatTokens(row.codex_tokens)}</td>
                     <td>{formatTokens(row.gemini_openclaw_tokens)}</td>
+                    <td>{formatTokens(row.gemini_export_est)}</td>
                     <td>{formatTokens(row.chatgpt_est)}</td>
                     <td>{row.driver}</td>
                   </tr>

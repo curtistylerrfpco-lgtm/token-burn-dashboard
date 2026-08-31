@@ -20,6 +20,7 @@ The dashboard labels its sources so measured and estimated values are not presen
 | --- | --- | --- |
 | Codex | Exact | Reads token totals from the local Codex thread database and assigns them to each thread's last-updated day. |
 | Gemini/OpenClaw | Exact | Aggregates `totalTokens` from local OpenClaw session records. |
+| Gemini export | Estimated | Reads visible conversation text from a private Google Takeout ZIP and estimates tokens at approximately four characters per token. |
 | ChatGPT | Estimated | Reads a ChatGPT data export and estimates tokens from message text length at approximately four characters per token. |
 
 All dates are normalized to `America/New_York`.
@@ -59,15 +60,23 @@ On Windows, run:
 The refresh process:
 
 1. Reads locally available Codex and OpenClaw usage records.
-2. Selects the newest valid ChatGPT export from `D:\ChatGPT Export`, `D:\Downloads`, and common user Downloads, Documents, and Desktop locations.
-3. Applies any manual driver classifications from `data/driver-overrides.json`.
-4. Rewrites `data/daily-burn.sample.json` and `data/source-status.json`.
-5. Runs a production build to validate the refreshed data.
+2. Selects the newest valid Gemini Takeout export from `D:\Gemini Export`.
+3. Selects the newest valid ChatGPT export from `D:\ChatGPT Export`, `D:\Downloads`, and common user Downloads, Documents, and Desktop locations.
+4. Applies any manual driver classifications from `data/driver-overrides.json`.
+5. Rewrites `data/daily-burn.sample.json` and `data/source-status.json`.
+6. Runs a production build to validate the refreshed data.
 
 To use a specific ChatGPT export, set `CHATGPT_EXPORT_PATH` before refreshing:
 
 ```powershell
 $env:CHATGPT_EXPORT_PATH = "C:\path\to\chatgpt-export.zip"
+.\scripts\refresh-dashboard.ps1
+```
+
+To use a specific Gemini Takeout ZIP, set `GEMINI_EXPORT_PATH` before refreshing:
+
+```powershell
+$env:GEMINI_EXPORT_PATH = "C:\path\to\takeout.zip"
 .\scripts\refresh-dashboard.ps1
 ```
 
@@ -101,6 +110,7 @@ The UI reads normalized daily rows from `data/daily-burn.sample.json`:
   "date": "2026-07-03",
   "codex_tokens": 125000,
   "gemini_openclaw_tokens": 42000,
+  "gemini_export_est": 12000,
   "chatgpt_est": 18000,
   "total": 185000,
   "driver": "shipping",

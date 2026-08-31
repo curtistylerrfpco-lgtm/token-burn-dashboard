@@ -8,6 +8,7 @@ import re
 import sqlite3
 import zipfile
 from collections import Counter, defaultdict
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
 from zoneinfo import ZoneInfo
@@ -17,15 +18,29 @@ PROJECT = Path(__file__).resolve().parents[1]
 HOME = Path.home()
 CHATGPT_EXPORT_INBOX = Path("D:/ChatGPT Export")
 CHATGPT_EXPORT_DOWNLOADS = Path("D:/Downloads")
+GEMINI_EXPORT_INBOX = Path("D:/Gemini Export")
 TIMEZONE = ZoneInfo("America/New_York")
 DATA_PATH = PROJECT / "data" / "daily-burn.sample.json"
 STATUS_PATH = PROJECT / "data" / "source-status.json"
 OVERRIDES_PATH = PROJECT / "data" / "driver-overrides.json"
 MAX_CHATGPT_EXPORT_BYTES = 150 * 1024 * 1024
+MAX_GEMINI_EXPORT_BYTES = 150 * 1024 * 1024
 MAX_EXPORT_SEARCH_FILES = 25_000
 CHATGPT_CONVERSATION_MEMBER_RE = re.compile(
     r"(?:^|/)conversations(?:-\d+)?\.json$",
     re.IGNORECASE,
+)
+GEMINI_ACTIVITY_MEMBER_RE = re.compile(
+    r"(?:^|/)My Activity/Gemini Apps/MyActivity\.html$",
+    re.IGNORECASE,
+)
+GEMINI_WORKSPACE_MEMBER_RE = re.compile(
+    r"(?:^|/)Gemini in Workspace/Conversation History/conversation_(\d+)\.txt$",
+    re.IGNORECASE,
+)
+GEMINI_ACTIVITY_TIMESTAMP_RE = re.compile(
+    r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) "
+    r"\d{1,2}, \d{4}, \d{1,2}:\d{2}:\d{2}\s+(?:AM|PM)(?:\s+[A-Z]{2,5})?"
 )
 SKIP_EXPORT_DIRS = {
     ".git",
@@ -50,25 +65,34 @@ DRIVER_RULES = {
 def main() -> None:
     codex, driver_scores, codex_status = load_codex()
     gemini, gemini_status = load_openclaw()
+    gemini_export, gemini_export_status = load_gemini_export()
     chatgpt, chatgpt_status = load_chatgpt()
     overrides = load_overrides()
 
-    days = sorted(set(codex) | set(gemini) | set(chatgpt))
+    days = sorted(set(codex) | set(gemini) | set(gemini_export) | set(chatgpt))
     rows = []
     for day in days:
         driver = overrides.get(day) or dominant_driver(driver_scores.get(day, Counter()))
         codex_tokens = codex.get(day, 0)
         gemini_tokens = gemini.get(day, 0)
+        gemini_export_est = gemini_export.get(day, 0)
         chatgpt_est = chatgpt.get(day, 0)
         rows.append(
             {
                 "date": day,
                 "codex_tokens": codex_tokens,
                 "gemini_openclaw_tokens": gemini_tokens,
+                "gemini_export_est": gemini_export_est,
                 "chatgpt_est": chatgpt_est,
-                "total": codex_tokens + gemini_tokens + chatgpt_est,
+                "total": codex_tokens + gemini_tokens + gemini_export_est + chatgpt_est,
                 "driver": driver,
-                "evidence": build_evidence(codex_tokens, gemini_tokens, chatgpt_est, driver),
+                "evidence": build_evidence(
+                    codex_tokens,
+                    gemini_tokens,
+                    gemini_export_est,
+                    chatgpt_est,
+                    driver,
+                ),
             }
         )
 
@@ -79,6 +103,7 @@ def main() -> None:
         "sources": {
             "codex": codex_status,
             "gemini_openclaw": gemini_status,
+            "gemini_export": gemini_export_status,
             "chatgpt": chatgpt_status,
         },
         "rows": len(rows),
@@ -87,6 +112,7 @@ def main() -> None:
         "totals": {
             "codex_tokens": sum(codex.values()),
             "gemini_openclaw_tokens": sum(gemini.values()),
+            "gemini_export_est": sum(gemini_export.values()),
             "chatgpt_est": sum(chatgpt.values()),
         },
     }
@@ -163,6 +189,174 @@ def load_openclaw() -> tuple[Counter[str], dict[str, Any]]:
         "records": records,
         "models": dict(models),
     }
+
+
+def load_gemini_export() -> tuple[Counter[str], dict[str, Any]]:
+    export = find_gemini_export()
+    if not export:
+        return Counter(), {
+            "fidelity": "estimated",
+            "status": "waiting_for_export",
+            "records": 0,
+            "method": "visible exported conversation text characters / 4",
+        }
+
+    totals: Counter[str] = Counter()
+    records = 0
+    activity_records = 0
+    workspace_records = 0
+
+    try:
+        if export.stat().st_size > MAX_GEMINI_EXPORT_BYTES:
+            raise ValueError("Gemini export is too large for the local refresh script")
+
+        with zipfile.ZipFile(export) as archive:
+            members = gemini_export_members(archive)
+            if not members:
+                raise ValueError("No supported Gemini history files in export")
+            if sum(member.file_size for member in members) > MAX_GEMINI_EXPORT_BYTES:
+                raise ValueError("Gemini history is too large for the local refresh script")
+
+            for member in members:
+                normalized_name = member.filename.replace("\\", "/")
+                content = archive.read(member).decode("utf-8", errors="replace")
+                if GEMINI_ACTIVITY_MEMBER_RE.search(normalized_name):
+                    parsed, parsed_records = parse_gemini_activity(content)
+                    totals.update(parsed)
+                    records += parsed_records
+                    activity_records += parsed_records
+                    continue
+
+                workspace_match = GEMINI_WORKSPACE_MEMBER_RE.search(normalized_name)
+                if workspace_match:
+                    day = timestamp_day(int(workspace_match.group(1)))
+                    visible_characters = len(" ".join(content.split()))
+                    if day and visible_characters:
+                        totals[day] += max(1, math.ceil(visible_characters / 4))
+                        records += 1
+                        workspace_records += 1
+    except (OSError, ValueError, zipfile.BadZipFile) as error:
+        return Counter(), {
+            "fidelity": "estimated",
+            "status": "export_error",
+            "records": 0,
+            "error": type(error).__name__,
+        }
+
+    return totals, {
+        "fidelity": "estimated",
+        "status": "loaded",
+        "records": records,
+        "activity_records": activity_records,
+        "workspace_conversations": workspace_records,
+        "method": "visible exported conversation text characters / 4",
+        "export": export.name,
+    }
+
+
+def find_gemini_export() -> Path | None:
+    explicit = os.environ.get("GEMINI_EXPORT_PATH")
+    if explicit:
+        path = Path(explicit).expanduser()
+        return path if path.is_file() else None
+
+    if not GEMINI_EXPORT_INBOX.exists():
+        return None
+
+    candidates = []
+    for path in GEMINI_EXPORT_INBOX.glob("*.zip"):
+        try:
+            with zipfile.ZipFile(path) as archive:
+                if gemini_export_members(archive):
+                    candidates.append(path)
+        except (OSError, zipfile.BadZipFile):
+            continue
+    return max(candidates, key=lambda path: path.stat().st_mtime, default=None)
+
+
+def gemini_export_members(archive: zipfile.ZipFile) -> list[zipfile.ZipInfo]:
+    return [
+        member
+        for member in archive.infolist()
+        if GEMINI_ACTIVITY_MEMBER_RE.search(member.filename.replace("\\", "/"))
+        or GEMINI_WORKSPACE_MEMBER_RE.search(member.filename.replace("\\", "/"))
+    ]
+
+
+def parse_gemini_activity(content: str) -> tuple[Counter[str], int]:
+    parser = GeminiActivityParser()
+    parser.feed(content)
+    parser.close()
+    return parser.totals, parser.records
+
+
+class GeminiActivityParser(HTMLParser):
+    """Extract dated, visible conversation text from Google Takeout activity cards."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.totals: Counter[str] = Counter()
+        self.records = 0
+        self.outer_depth = 0
+        self.main_content_depth: int | None = None
+        self.all_parts: list[str] = []
+        self.main_parts: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        classes = set(dict(attrs).get("class", "").split())
+        if tag == "div" and not self.outer_depth and "outer-cell" in classes:
+            self.outer_depth = 1
+            self.all_parts = []
+            self.main_parts = []
+            return
+        if not self.outer_depth:
+            return
+        if tag == "div":
+            self.outer_depth += 1
+            if (
+                "content-cell" in classes
+                and "mdl-cell--6-col" in classes
+                and "mdl-typography--text-right" not in classes
+            ):
+                self.main_content_depth = self.outer_depth
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag != "div" or not self.outer_depth:
+            return
+        if self.main_content_depth == self.outer_depth:
+            self.main_content_depth = None
+        self.outer_depth -= 1
+        if not self.outer_depth:
+            self.finish_card()
+
+    def handle_data(self, data: str) -> None:
+        if not self.outer_depth:
+            return
+        self.all_parts.append(data)
+        if self.main_content_depth is not None:
+            self.main_parts.append(data)
+
+    def finish_card(self) -> None:
+        all_text = " ".join(" ".join(self.all_parts).replace("\u202f", " ").split())
+        main_text = " ".join(" ".join(self.main_parts).split())
+        timestamp_match = GEMINI_ACTIVITY_TIMESTAMP_RE.search(all_text)
+        if not timestamp_match or not main_text:
+            return
+        day = gemini_activity_day(timestamp_match.group(0))
+        if not day:
+            return
+        self.totals[day] += max(1, math.ceil(len(main_text) / 4))
+        self.records += 1
+
+
+def gemini_activity_day(value: str) -> str | None:
+    normalized = " ".join(value.replace("\u202f", " ").split())
+    normalized = re.sub(r"\s+[A-Z]{2,5}$", "", normalized)
+    try:
+        parsed = dt.datetime.strptime(normalized, "%b %d, %Y, %I:%M:%S %p")
+        return parsed.replace(tzinfo=TIMEZONE).date().isoformat()
+    except ValueError:
+        return None
 
 
 def load_chatgpt() -> tuple[Counter[str], dict[str, Any]]:
@@ -369,12 +563,20 @@ def load_overrides() -> dict[str, str]:
     }
 
 
-def build_evidence(codex: int, gemini: int, chatgpt: int, driver: str) -> str:
+def build_evidence(
+    codex: int,
+    gemini: int,
+    gemini_export: int,
+    chatgpt: int,
+    driver: str,
+) -> str:
     sources = []
     if codex:
         sources.append("Codex exact")
     if gemini:
         sources.append("Gemini/Open Claw exact")
+    if gemini_export:
+        sources.append("Gemini export estimated")
     if chatgpt:
         sources.append("ChatGPT estimated")
     return f"{', '.join(sources) or 'No measured usage'}; scrubbed {driver} day"

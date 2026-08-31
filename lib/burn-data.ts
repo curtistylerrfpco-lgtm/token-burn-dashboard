@@ -1,6 +1,7 @@
 export const sourceColumns = [
   { key: "codex_tokens", label: "Codex", fidelity: "exact" },
   { key: "gemini_openclaw_tokens", label: "Gemini / Open Claw", fidelity: "exact" },
+  { key: "gemini_export_est", label: "Gemini export", fidelity: "estimated" },
   { key: "chatgpt_est", label: "ChatGPT", fidelity: "estimated" },
 ] as const;
 
@@ -10,6 +11,7 @@ export type RawBurnRow = {
   date: string;
   codex_tokens?: number;
   gemini_openclaw_tokens?: number;
+  gemini_export_est?: number;
   chatgpt_est?: number;
   total?: number;
   driver: string;
@@ -26,13 +28,15 @@ export function normalizeRows(rows: RawBurnRow[]): BurnRow[] {
     .map((row) => {
       const codex = asNumber(row.codex_tokens);
       const geminiOpenClaw = asNumber(row.gemini_openclaw_tokens);
+      const geminiExport = asNumber(row.gemini_export_est);
       const chatgpt = asNumber(row.chatgpt_est);
-      const computedTotal = codex + geminiOpenClaw + chatgpt;
+      const computedTotal = codex + geminiOpenClaw + geminiExport + chatgpt;
 
       return {
         date: row.date,
         codex_tokens: codex,
         gemini_openclaw_tokens: geminiOpenClaw,
+        gemini_export_est: geminiExport,
         chatgpt_est: chatgpt,
         total: asNumber(row.total) || computedTotal,
         driver: row.driver || "unlabeled",
