@@ -1201,41 +1201,21 @@
   },
   {
     "date": "2026-09-20",
-    "codex_tokens": 521768,
+    "codex_tokens": 235680,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 521768,
-    "driver": "shipping",
-    "evidence": "Codex exact; scrubbed shipping day"
-  },
-  {
-    "date": "2026-09-21",
-    "codex_tokens": 354457,
-    "gemini_openclaw_tokens": 0,
-    "gemini_export_est": 0,
-    "chatgpt_est": 0,
-    "total": 354457,
-    "driver": "shipping",
-    "evidence": "Codex exact; scrubbed shipping day"
-  },
-  {
-    "date": "2026-09-22",
-    "codex_tokens": 403407,
-    "gemini_openclaw_tokens": 0,
-    "gemini_export_est": 0,
-    "chatgpt_est": 0,
-    "total": 403407,
-    "driver": "shipping",
-    "evidence": "Codex exact; scrubbed shipping day"
+    "total": 235680,
+    "driver": "admin",
+    "evidence": "Codex exact; scrubbed admin day"
   },
   {
     "date": "2026-09-26",
-    "codex_tokens": 19109,
+    "codex_tokens": 1416318,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 19109,
+    "total": 1416318,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
