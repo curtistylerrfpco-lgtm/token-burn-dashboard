@@ -1241,21 +1241,21 @@
   },
   {
     "date": "2026-10-04",
-    "codex_tokens": 15508261,
+    "codex_tokens": 15115372,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 15508261,
+    "total": 15115372,
     "driver": "admin",
     "evidence": "Codex exact; scrubbed admin day"
   },
   {
-    "date": "2026-10-05",
-    "codex_tokens": 19070,
+    "date": "2026-10-06",
+    "codex_tokens": 761464,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 19070,
+    "total": 761464,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
