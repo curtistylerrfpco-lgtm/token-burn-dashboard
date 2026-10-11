@@ -1,11 +1,11 @@
 {
-  "refreshed_at": "2026-10-10T11:58:28-04:00",
+  "refreshed_at": "2026-10-10T22:59:09-04:00",
   "timezone": "America/New_York",
   "sources": {
     "codex": {
       "fidelity": "exact",
       "status": "loaded",
-      "records": 55,
+      "records": 56,
       "database": "state_5.sqlite",
       "date_allocation": "thread last-updated day"
     },
@@ -34,11 +34,11 @@
       "method": "message text characters / 4"
     }
   },
-  "rows": 129,
+  "rows": 127,
   "first_date": "2025-01-26",
   "last_date": "2026-10-10",
   "totals": {
-    "codex_tokens": 104296464,
+    "codex_tokens": 105568927,
     "gemini_openclaw_tokens": 370725,
     "gemini_export_est": 410854,
     "chatgpt_est": 620325
