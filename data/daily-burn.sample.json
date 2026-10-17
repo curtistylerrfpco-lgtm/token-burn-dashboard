@@ -1281,11 +1281,31 @@
   },
   {
     "date": "2026-10-12",
-    "codex_tokens": 162994,
+    "codex_tokens": 143440,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 162994,
+    "total": 143440,
+    "driver": "shipping",
+    "evidence": "Codex exact; scrubbed shipping day"
+  },
+  {
+    "date": "2026-10-13",
+    "codex_tokens": 557991,
+    "gemini_openclaw_tokens": 0,
+    "gemini_export_est": 0,
+    "chatgpt_est": 0,
+    "total": 557991,
+    "driver": "shipping",
+    "evidence": "Codex exact; scrubbed shipping day"
+  },
+  {
+    "date": "2026-10-17",
+    "codex_tokens": 69079,
+    "gemini_openclaw_tokens": 0,
+    "gemini_export_est": 0,
+    "chatgpt_est": 0,
+    "total": 69079,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
