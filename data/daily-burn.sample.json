@@ -1390,22 +1390,22 @@
     "evidence": "Codex exact; scrubbed shipping day"
   },
   {
-    "date": "2026-10-29",
-    "codex_tokens": 439628,
+    "date": "2026-10-30",
+    "codex_tokens": 5709748,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 439628,
+    "total": 5709748,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   },
   {
-    "date": "2026-10-30",
-    "codex_tokens": 5196859,
+    "date": "2026-10-31",
+    "codex_tokens": 459175,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 5196859,
+    "total": 459175,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
