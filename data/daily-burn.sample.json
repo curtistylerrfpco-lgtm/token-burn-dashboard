@@ -1470,12 +1470,12 @@
     "evidence": "Codex exact; scrubbed shipping day"
   },
   {
-    "date": "2026-11-07",
-    "codex_tokens": 49975,
+    "date": "2026-11-08",
+    "codex_tokens": 519715,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 49975,
+    "total": 519715,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
