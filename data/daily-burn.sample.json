@@ -1491,11 +1491,21 @@
   },
   {
     "date": "2026-11-10",
-    "codex_tokens": 19690,
+    "codex_tokens": 494464,
     "gemini_openclaw_tokens": 0,
     "gemini_export_est": 0,
     "chatgpt_est": 0,
-    "total": 19690,
+    "total": 494464,
+    "driver": "shipping",
+    "evidence": "Codex exact; scrubbed shipping day"
+  },
+  {
+    "date": "2026-11-11",
+    "codex_tokens": 44262,
+    "gemini_openclaw_tokens": 0,
+    "gemini_export_est": 0,
+    "chatgpt_est": 0,
+    "total": 44262,
     "driver": "shipping",
     "evidence": "Codex exact; scrubbed shipping day"
   }
